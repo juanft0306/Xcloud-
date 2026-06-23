@@ -1,0 +1,39 @@
+:root { --principal: #2c3e50; --secundario: #16a085; --peligro: #e74c3c; --advertencia: #f39c12; --claro: #ecf0f1; --fondo: #f4f6f7; --texto: #333; --tarjeta: #fff; --borde: #ccc; --sombra: rgba(0,0,0,0.1); }
+body.modo-oscuro { --principal: #1a252f; --secundario: #1abc9c; --peligro: #c0392b; --advertencia: #f1c40f; --claro: #2c3e50; --fondo: #121212; --texto: #ffffff; --tarjeta: #1e1e1e; --borde: #444; --sombra: rgba(255,255,255,0.05); }
+body.modo-oscuro, body.modo-oscuro p, body.modo-oscuro li, body.modo-oscuro td, body.modo-oscuro th, body.modo-oscuro label, body.modo-oscuro h1, body.modo-oscuro h2, body.modo-oscuro h3, body.modo-oscuro h4, body.modo-oscuro h5, body.modo-oscuro h6 { color: var(--texto); }
+body.modo-oscuro .btn { color: white; } body.modo-oscuro .etiqueta { color: white; } body.modo-oscuro a { color: #1abc9c; }
+* { margin:0; padding:0; box-sizing:border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+body { background: var(--fondo); color: var(--texto); padding-bottom:80px; font-size:14px; }
+.barra-superior { background: var(--principal); color: white; padding:12px; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:100; }
+.barra-superior a { color: white; text-decoration:none; font-weight:bold; }
+.contenedor { padding:12px; max-width:600px; margin:0 auto; }
+.tarjeta { background: var(--tarjeta); padding:15px; border-radius:8px; box-shadow:0 2px 4px var(--sombra); margin-bottom:12px; }
+.btn { display:inline-block; background: var(--secundario); color: white; padding:12px; border:none; border-radius:6px; width:100%; font-size:15px; text-align:center; text-decoration:none; cursor:pointer; font-weight:bold; margin-top:5px; }
+.btn-peligro { background: var(--peligro); } .btn-advertencia { background: var(--advertencia); }
+.campo { margin-bottom:12px; } .campo label { display:block; margin-bottom:5px; font-weight:bold; }
+.control { width:100%; padding:10px; border:1px solid var(--borde); border-radius:6px; font-size:15px; background: var(--tarjeta); color: var(--texto); }
+.etiqueta { padding:4px 8px; border-radius:4px; color: white; font-size:11px; font-weight:bold; }
+.etiqueta-peligro { background: var(--peligro); } .badge-modo { background: var(--peligro); } .badge-normal { background: var(--secundario); }
+.rejilla-2 { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.alerta { padding: 10px; background: #fde8e8; border-left: 5px solid #c0392b; margin-bottom: 12px; border-radius: 4px; color: #5a1a1a; }
+body.modo-oscuro .alerta { background: #3d1a1a; border-left-color: #e74c3c; color: #f5c6c6; }
+.navegacion-inferior { position:fixed; bottom:0; left:0; right:0; background: var(--tarjeta); display:flex; border-top:1px solid var(--borde); box-shadow:0 -2px 5px var(--sombra); }
+.item-nav { flex:1; text-align:center; padding:10px 5px; text-decoration:none; color: var(--principal); font-size:11px; font-weight:bold; display:flex; flex-direction:column; align-items:center; gap:4px; }
+.item-nav span:first-child { font-size:1.4em; }
+.scroll-tabla { overflow-x:auto; } table { width:100%; border-collapse:collapse; margin-top:10px; font-size:12px; }
+th, td { padding:8px; text-align:left; border-bottom:1px solid var(--borde); } th { background: var(--claro); color: var(--texto); cursor:pointer; }
+.chatbot-btn { position:fixed; bottom:90px; right:15px; z-index:1000; background: var(--secundario); color: white; border:none; border-radius:50%; width:55px; height:55px; font-size:24px; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,0.3); }
+.chat-window { position:fixed; bottom:150px; right:15px; z-index:1000; width:300px; max-height:350px; background: var(--tarjeta); border:1px solid var(--borde); border-radius:10px; box-shadow:0 4px 15px rgba(0,0,0,0.2); display:none; flex-direction:column; }
+.chat-header { background: var(--principal); color: white; padding:10px; border-radius:10px 10px 0 0; }
+.chat-body { flex:1; overflow-y:auto; padding:10px; font-size:13px; max-height:200px; }
+.chat-body .msg { margin-bottom:8px; padding:6px 10px; border-radius:10px; max-width:85%; clear:both; }
+.chat-body .user { background: var(--secundario); color: white; float:right; }
+.chat-body .bot { background: var(--claro); color: var(--texto); float:left; }
+.chat-input { display:flex; padding:5px; border-top:1px solid var(--borde); }
+.chat-input input { flex:1; padding:8px; border:1px solid var(--borde); border-radius:5px; background: var(--tarjeta); color: var(--texto); }
+.chat-input button { background: var(--secundario); color: white; border:none; border-radius:5px; padding:8px 12px; margin-left:5px; }
+.factura-moderna { background: white; padding: 20px; border-radius: 10px; max-width: 500px; margin: 0 auto; font-family: monospace; }
+.ticket-clasico { max-width: 320px; margin: 0 auto; border: 1px dashed #000; padding: 10px; font-size: 12px; font-family: 'Courier New', monospace; background: #fff; }
+.centro { text-align: center; } .linea { border-top: 1px dashed #000; margin: 6px 0; }
+.total { font-size: 14px; font-weight: bold; text-align: right; } .legal { font-size: 10px; text-align: center; margin-top: 8px; }
+@media print { .barra-superior, .navegacion-inferior, .btn, .no-imprimir { display:none!important; } body { background:white; padding:0; } .contenedor { max-width:100%; } .tarjeta { box-shadow:none; border:1px solid #ccc; } }
