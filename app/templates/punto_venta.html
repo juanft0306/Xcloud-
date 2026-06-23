@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Venta{% endblock %}
+{% block content %}
+<script>
+let items = []; let totalVenta = 0;
+function agregarProducto(sku, desc, costo, stock) {
+    let cant = parseInt(prompt('Cantidad (máx '+stock+')','1'));
+    if(isNaN(cant)||cant<1||cant>stock) return;
+    let existente = items.find(i=>i.sku===sku);
+    if(existente) existente.cantidad += cant;
+    else items.push({sku, desc, cantidad:cant, precio:costo});
+    renderCarrito();
+}
+function renderCarrito() {
+    let html='', total=0;
+    items.forEach((item,idx)=>{
+        let sub = item.cantidad * item.precio; total += sub;
+        html += `<tr><td>${item.desc}<input type='hidden' name='sku[]' value='${item.sku}'></td>
+            <td><input type='number' name='cantidad[]' value='${item.cantidad}' style='width:50px;' onchange='items[${idx}].cantidad=parseInt(this.value)||1;renderCarrito()'></td>
+            <td><input type='number' step='0.01' name='precio[]' value='${item.precio}' style='width:70px;' onchange='items[${idx}].precio=parseFloat(this.value)||0;renderCarrito()'></td>
+            <td>$${sub.toFixed(2)}</td></tr>`;
+    });
+    document.getElementById('items').innerHTML = html;
+    document.getElementById('total').innerText = total.toFixed(2);
+    totalVenta = total;
+    actualizarTotalConGastos();
+}
+function actualizarTotalConGastos() {
+    let gasto = parseFloat(document.getElementById('gasto_monto').value) || 0;
+    let totalConGastos = totalVenta + gasto;
+    document.getElementById('total_con_gastos').innerText = totalConGastos.toFixed(2);
+}
+function buscar() {
+    let f = document.getElementById('buscador').value.toLowerCase();
+    let div = document.getElementById('lista'); div.innerHTML = '';
+    if(!f) return;
+    {{ productos|tojson }}.filter(p=>p.sku.toLowerCase().includes(f)||p.descripcion.toLowerCase().includes(f)).slice(0,10).forEach(p=>{
+        div.innerHTML += `<div style='padding:8px;cursor:pointer;' onclick="agregarProducto('${p.sku}','${p.descripcion}',${p.costo_usd},${p.stock})">${p.descripcion} - $${p.costo_usd.toFixed(2)} (Stock: ${p.stock})</div>`;
+    });
+}
+</script>
+<div class="barra-superior"><a>&#128722; Vender</a><a href="{{ url_for('dashboard.dashboard_negocio') }}">Atrás</a></div>
+<div class="contenedor">
+<div class="tarjeta">
+    <input type="text" id="buscador" class="control" placeholder="Buscar producto por nombre o SKU..." onkeyup="buscar()">
+    <div id="lista" style="max-height:150px;overflow-y:auto;margin-top:5px;"></div>
+</div>
+<form method="POST">
+<div class="tarjeta"><h4>&#128722; Carrito de productos</h4>
+    <div class="scroll-tabla"><table><thead><tr><th>Producto</th><th>Cant</th><th>Precio</th><th>Subtotal</th></tr></thead>
+    <tbody id="items"></tbody></table></div>
+    <h3 style="text-align:right;">Total productos: $<span id="total">0.00</span></h3>
+</div>
+<div class="tarjeta"><h4>&#128179; Datos de la venta</h4>
+    <div class="campo"><label>Cliente</label><input type="text" name="cliente" class="control" value="Consumidor Final"></div>
+    <div class="campo"><label>Método de Pago</label>
+        <select name="metodo_pago" class="control">
+            <option>Efectivo USD</option><option>Pago Móvil</option><option>Transferencia</option>
+        </select></div>
+    <div class="campo"><label>Monto recibido</label><input type="number" step="0.01" name="monto_recibido" class="control" value="0" placeholder="Ingrese el monto recibido del cliente"></div>
+</div>
+<div class="tarjeta"><h4>&#128184; Otros Gastos (opcional)</h4>
+    <p style="font-size:12px; color:#888;">Registra gastos asociados a esta venta (comisión externa, envío, empaque, etc.).</p>
+    <div class="rejilla-2">
+        <div class="campo"><label>Concepto del gasto</label><input type="text" name="gasto_concepto" class="control" placeholder="Ej: Comisión externa, envío"></div>
+        <div class="campo"><label>Monto USD</label><input type="number" step="0.01" name="gasto_monto" id="gasto_monto" class="control" value="0" oninput="actualizarTotalConGastos()"></div>
+    </div>
+    <p style="text-align:right;"><strong>Total + Gastos: $<span id="total_con_gastos">0.00</span></strong></p>
+</div>
+<button type="submit" class="btn">&#9989; Procesar Venta</button>
+</form>
+</div>
+{% endblock %}
