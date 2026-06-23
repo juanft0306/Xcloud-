@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Inicio{% endblock %}
+{% block head_extra %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+{% block content %}
+<div class="barra-superior"><a>&#128100; {{ rol_activo|capitalize }}</a>
+    <div style="display:flex; gap:10px; align-items:center;">
+        <a href="{{ url_for('dashboard.seleccionar_negocio') }}" style="font-size:12px;">&#127968; Negocio</a>
+        <a href="{{ url_for('dashboard.seleccionar_roles') }}" style="font-size:12px;">&#128100; Roles</a>
+        <a href="{{ url_for('auth.cerrar_sesion') }}" style="font-size:12px; color:#e74c3c;">&#128682; Salir</a>
+    </div></div>
+<div class="contenedor">
+<div style="text-align:right;">{% if modo_prueba %}<span class="etiqueta badge-modo">&#128308; Modo Prueba</span>{% else %}<span class="etiqueta badge-normal">&#128994; Modo Normal</span>{% endif %}</div>
+<div class="tarjeta"><h4>&#128204; Acceso rápido</h4>
+    <button id="btnModoPrueba" class="btn {% if modo_prueba %}btn-peligro{% endif %}">
+        &#129514; {% if modo_prueba %}Desactivar Modo Prueba{% else %}Activar Modo Prueba{% endif %}
+    </button>
+    <a href="{{ url_for('soporte.ayuda') }}" class="btn" style="margin-top:5px;">&#10067; Ayuda</a>
+    <a href="{{ url_for('auth.cambiar_password') }}" class="btn" style="margin-top:5px;">&#128274; Cambiar contraseña</a>
+    <a href="{{ url_for('api.escanear_factura') }}" class="btn" style="margin-top:5px;">&#128247; Escanear factura</a>
+</div>
+<div class="tarjeta"><p><strong>&#128177; Tasa actual:</strong> 1 USD = {{ "%.2f"|format(tasa) }} Bs</p>
+    {% if session['rol_activo'] == 'encargado' %}
+    <button id="btnMostrarManual" class="btn">&#9999;&#65039; Cambiar manualmente</button>
+    <div id="divManualTasa" style="display:none; margin-top:10px;">
+        <input type="number" id="nuevaTasa" class="control" step="0.01" placeholder="Nueva tasa">
+        <button id="btnGuardarTasa" class="btn" style="margin-top:5px;">Guardar tasa</button></div>{% endif %}
+</div>
+{% for p in stock_critico %}<div class="alerta">&#9888;&#65039; <strong>{{ p.descripcion }}</strong> stock bajo ({{ p.stock }}).</div>{% endfor %}
+{% if session['rol_activo'] == 'encargado' %}
+<div class="rejilla-2">
+<div class="tarjeta"><h4>Inversión Inventario</h4><h3>${{ "%.2f"|format(inv_total_usd) }}</h3><p>Bs {{ "%.2f"|format(inv_total_bs) }}</p></div>
+<div class="tarjeta"><h4>Ventas del Día</h4><h3>${{ "%.2f"|format(ventas_dia_usd) }}</h3><p>Bs {{ "%.2f"|format(ventas_dia_bs) }}</p></div></div>{% endif %}
+{% if session['rol_activo'] in ['encargado', 'vendedor'] or (session['rol'] == 'programador' and session.get('negocio_id') == 'verificacion') %}
+<div class="tarjeta"><h4>&#128200; Tendencias</h4><canvas id="graficoTendencia" style="max-height:250px;"></canvas></div>{% endif %}
+</div>
+<div class="navegacion-inferior">
+<a href="{{ url_for('dashboard.dashboard_negocio') }}" class="item-nav"><span>&#127968;</span><span>Inicio</span></a>
+{% if session['rol_activo'] in ['encargado', 'vendedor'] %}
+  {% if tiene_clientes or session['rol_activo'] == 'encargado' %}
+  <a href="{{ url_for('ventas.punto_venta') }}" class="item-nav"><span>&#128722;</span><span>Vender</span></a>{% endif %}
+<a href="{{ url_for('ventas.listar_facturas') }}" class="item-nav"><span>&#129534;</span><span>Facturas</span></a>{% endif %}
+{% if session['rol_activo'] == 'encargado' %}
+<a href="{{ url_for('inventario.inventario') }}" class="item-nav"><span>&#128230;</span><span>Inv</span></a>
+<a href="{{ url_for('contabilidad.contabilidad') }}" class="item-nav"><span>&#128188;</span><span>Conta</span></a>
+<a href="{{ url_for('configuracion.configuracion') }}" class="item-nav"><span>&#9881;&#65039;</span><span>Conf</span></a>{% endif %}
+{% if session['rol_activo'] == 'cliente' and tiene_clientes %}
+<a href="{{ url_for('tienda.tienda') }}" class="item-nav"><span>&#128722;&#65039;</span><span>Tienda</span></a>{% endif %}
+{% if session['rol_activo'] == 'proveedor' %}
+<a href="{{ url_for('proveedor.pedidos_proveedor') }}" class="item-nav"><span>&#128230;</span><span>Pedidos</span></a>{% endif %}
+<a href="{{ url_for('soporte.ayuda') }}" class="item-nav"><span>&#10067;</span><span>Ayuda{% if notif_count > 0 %} ({{ notif_count }}){% endif %}</span></a>
+</div>
+<script>
+document.getElementById('btnModoPrueba').addEventListener('click', function() {
+    fetch('/toggle_modo_prueba_global', { method: 'POST' }).then(r => r.json()).then(d => { if(d.success) location.reload(); });
+});
+{% if session['rol_activo'] == 'encargado' %}
+document.getElementById('btnMostrarManual')?.addEventListener('click', function() { document.getElementById('divManualTasa').style.display = 'block'; });
+document.getElementById('btnGuardarTasa')?.addEventListener('click', function() {
+    let val = parseFloat(document.getElementById('nuevaTasa').value);
+    if(isNaN(val) || val <= 0) { alert('Tasa inválida'); return; }
+    fetch('/guardar_tasa_manual', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ tasa: val }) })
+        .then(r => r.json()).then(d => { if(d.success) { alert('Tasa guardada'); location.reload(); } });
+});
+{% endif %}
+let isDark = document.body.classList.contains('modo-oscuro');
+let gridColor = isDark ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.1)';
+let tickColor = isDark ? '#ffffff' : '#666';
+let bgColor = isDark ? 'rgba(26, 188, 156, 0.8)' : 'rgba(22,160,133,0.6)';
+new Chart(document.getElementById('graficoTendencia').getContext('2d'), {
+    type: 'bar', data: { labels: {{ nombres_clientes|tojson }}, datasets: [{ label: 'Gasto total (USD)', data: {{ montos_clientes|tojson }}, backgroundColor: bgColor }] },
+    options: { scales: { x: { grid: { color: gridColor }, ticks: { color: tickColor } }, y: { grid: { color: gridColor }, ticks: { color: tickColor, callback: v => '$' + v.toFixed(0) } } }, plugins: { legend: { labels: { color: tickColor } } } }
+});
+</script>
+{% endblock %}
