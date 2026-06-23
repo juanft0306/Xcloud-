@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Libro Diario{% endblock %}
+{% block content %}
+<div class="barra-superior"><a>&#128214; Libro Diario</a><a href="{{ url_for('contabilidad.contabilidad') }}">Atrás</a></div>
+<div class="contenedor"><h3>Libro Diario</h3>
+{% for a in asientos %}
+<div class="tarjeta">
+<p><strong>Asiento #{{ a[0] }}</strong> - {{ a[1] }}</p>
+<p><strong>Concepto:</strong> {{ a[2] }}</p>
+{% if a[3] %}<p><strong>Factura:</strong> {{ a[3] }}</p>{% endif %}
+{% if a[4] %}<p><strong>Tasa:</strong> {{ "%.2f"|format(a[4]) }} Bs/USD</p>{% endif %}
+<p><strong>Movimientos:</strong></p>
+<p style="font-size:12px; white-space:pre-wrap;">{{ a[5] or 'Sin movimientos' }}</p>
+</div>
+{% endfor %}
+{% if total_paginas > 1 %}<div style="text-align:center;margin-top:10px;">
+    {% if pagina > 1 %}<a href="?pagina={{ pagina-1 }}" class="btn">&#9664; Anterior</a>{% endif %}
+    <span>Página {{ pagina }} de {{ total_paginas }}</span>
+    {% if pagina < total_paginas %}<a href="?pagina={{ pagina+1 }}" class="btn">Siguiente &#9654;</a>{% endif %}
+</div>{% endif %}
+</div>
+{% endblock %}
