@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Carrito{% endblock %}
+{% block content %}
+<div class="barra-superior"><a>&#128722; Carrito</a><a href="{{ url_for('tienda.tienda') }}">Seguir comprando</a></div>
+<div class="contenedor"><h3>Tu carrito</h3>
+{% for item in items %}<div class="tarjeta"><p><strong>{{ item.descripcion }}</strong> - ${{ "%.2f"|format(item.precio) }} x {{ item.cantidad }} = ${{ "%.2f"|format(item.subtotal) }}</p>
+<a href="{{ url_for('tienda.eliminar_carrito', sku=item.sku) }}" class="btn btn-peligro">Eliminar</a></div>{% endfor %}
+<div class="tarjeta"><h4>Total: ${{ "%.2f"|format(total) }}</h4>
+<form method="POST" action="{{ url_for('tienda.realizar_pedido') }}">
+<div class="campo"><label>Método de pago</label><select name="metodo_pago" class="control"><option>Efectivo</option><option>Pago Móvil</option><option>Transferencia</option></select></div>
+<button type="submit" class="btn">Realizar pedido</button></form></div>
+</div>
+{% endblock %}
