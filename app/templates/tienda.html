@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Tienda{% endblock %}
+{% block content %}
+<div class="barra-superior"><a>&#128722;&#65039; Tienda</a><a href="{{ url_for('dashboard.dashboard_negocio') }}">Atrás</a></div>
+<div class="contenedor"><h3>Productos disponibles</h3>
+<div class="rejilla-2">
+{% for p in productos %}
+<div class="tarjeta">
+    {% if p.imagen_url %}<img src="{{ p.imagen_url }}" alt="{{ p.descripcion }}" style="max-width:100px;">{% endif %}
+    <h4>{{ p.descripcion }}</h4><p><strong>${{ "%.2f"|format(p.costo_usd) }}</strong></p><p>Stock: {{ p.stock }}</p>
+    <form method="POST" action="{{ url_for('tienda.agregar_carrito') }}">
+        <input type="hidden" name="sku" value="{{ p.sku }}">
+        <input type="number" name="cantidad" value="1" min="1" max="{{ p.stock }}" style="width:60px;">
+        <button type="submit" class="btn" style="margin-top:5px;">Añadir al carrito</button>
+    </form>
+</div>
+{% endfor %}
+</div>
+<a href="{{ url_for('tienda.ver_carrito') }}" class="btn">Ver carrito</a>
+</div>
+{% endblock %}
