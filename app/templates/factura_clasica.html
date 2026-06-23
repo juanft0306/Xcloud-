@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Factura {{ factura.numero }}{% endblock %}
+{% block content %}
+<div class="barra-superior"><a>&#129534; Factura #{{ factura.numero }}</a><a href="{{ url_for('ventas.listar_facturas') }}">Volver</a></div>
+<div class="contenedor">
+<div class="ticket-clasico"><div class="centro"><strong>{{ negocio.nombre }}</strong>
+    <p style="margin:1px 0;">Tel: {{ negocio.telefono }} | Email: {{ negocio.email }}</p></div>
+<div class="linea"></div>
+    <p><strong>Factura Nº:</strong> {{ factura.numero }}</p><p><strong>Fecha:</strong> {{ factura.fecha }}</p>
+    <p><strong>Cliente:</strong> {{ factura.cliente }}</p><p><strong>Método de pago:</strong> {{ factura.metodo_pago }}</p>
+<div class="linea"></div>
+<table style="width:100%;border-collapse:collapse;"><thead><tr><th style="text-align:left;">Desc</th><th style="text-align:left;">Cant</th><th style="text-align:left;">P.U.</th><th style="text-align:left;">Subtotal</th></tr></thead><tbody>
+{% for d in detalles %}<tr><td>{{ d.sku }}</td><td>{{ d.cantidad }}</td><td>${{ "%.2f"|format(d.precio_unitario_usd) }}</td>
+    <td>${{ "%.2f"|format(d.cantidad * d.precio_unitario_usd) }}</td></tr>{% endfor %}</tbody></table>
+<div class="linea"></div><p class="total">TOTAL USD: ${{ "%.2f"|format(factura.total_usd) }}</p>
+{% if tasa > 0 %}<p class="total">TOTAL BS: {{ "%.2f"|format(factura.total_usd * tasa) }}</p>
+<p style="text-align:right;font-size:10px;">Tasa BCV: {{ "%.2f"|format(tasa) }} Bs/USD</p>{% endif %}
+<div class="linea"></div><div class="legal"><p>Gracias por su compra.</p></div></div>
+<div style="text-align:center;margin-top:10px;" class="no-imprimir"><button onclick="window.print()" class="btn">&#128424;&#65039; Imprimir</button>
+    <a href="{{ url_for('ventas.listar_facturas') }}" class="btn">Volver</a></div>
+</div>
+{% endblock %}
