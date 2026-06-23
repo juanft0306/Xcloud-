@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Mis Pedidos{% endblock %}
+{% block content %}
+<div class="barra-superior"><a>&#128203; Mis Pedidos</a><a href="{{ url_for('tienda.tienda') }}">Tienda</a></div>
+<div class="contenedor"><h3>Historial</h3>
+{% for p in pedidos %}<div class="tarjeta"><p><strong>#{{ p[0] }}</strong> - {{ p[1] }}</p>
+<p>Total: ${{ "%.2f"|format(p[2]) }} - Estado: {{ p[3] }}</p><p>Método: {{ p[4] }}</p>
+{% if p[5] %}<p><strong>Código de entrega:</strong> <code>{{ p[5] }}</code></p>{% endif %}
+</div>{% endfor %}</div>
+{% endblock %}
