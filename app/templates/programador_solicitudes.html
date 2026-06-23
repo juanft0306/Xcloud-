@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Validar Solicitudes{% endblock %}
+{% block content %}
+<div class="barra-superior"><a>&#128295; Validar Negocios</a><a href="{{ url_for('auth.cerrar_sesion') }}">Salir</a></div>
+<div class="contenedor"><h3>Solicitudes pendientes</h3>
+{% if solicitudes %}
+    {% for s in solicitudes %}
+    <div class="tarjeta">
+        <p><strong>Negocio:</strong> {{ s[1] }}</p><p><strong>Email:</strong> {{ s[2] }}</p>
+        <p><strong>Teléfono:</strong> {{ s[3] }}</p><p><strong>Descripción:</strong> {{ s[4] }}</p>
+        <p><strong>Fecha:</strong> {{ s[5] }}</p>
+        <div class="rejilla-2">
+            <a href="{{ url_for('programador.aprobar_negocio', solicitud_id=s[0]) }}" class="btn" style="background:#27ae60;">&#9989; Aprobar</a>
+            <a href="{{ url_for('programador.rechazar_negocio', solicitud_id=s[0]) }}" class="btn btn-peligro">&#10060; Rechazar</a>
+        </div>
+    </div>
+    {% endfor %}
+{% else %}<p>No hay solicitudes pendientes.</p>{% endif %}
+<a href="{{ url_for('dashboard.seleccionar_negocio') }}" class="btn">Volver</a>
+</div>
+{% endblock %}
