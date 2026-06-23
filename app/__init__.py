@@ -27,7 +27,7 @@ def create_app():
     from app.routes.inventario import inventario_bp
     from app.routes.ventas import ventas_bp
     from app.routes.contabilidad import contabilidad_bp
-    from app.routes.configuracion import configuracion_bp
+    from app.routes.configuration import configuration_bp
     from app.routes.programador import programador_bp
     from app.routes.tienda import tienda_bp
     from app.routes.proveedor import proveedor_bp
