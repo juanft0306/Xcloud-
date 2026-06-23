@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Negocios{% endblock %}
+{% block content %}
+<div class="barra-superior"><a>&#127968; Negocios</a><a href="{{ url_for('dashboard.seleccionar_negocio') }}">Volver</a></div>
+<div class="contenedor"><h3>Negocios registrados</h3>
+{% for n in negocios %}<div class="tarjeta"><p><strong>{{ n[1] }}</strong> - {{ n[3] }}</p>
+<a href="{{ url_for('programador.eliminar_negocio', negocio_id=n[0]) }}" class="btn btn-peligro" onclick="return confirm('¿Eliminar?')">Eliminar</a>
+</div>{% endfor %}</div>
+{% endblock %}
