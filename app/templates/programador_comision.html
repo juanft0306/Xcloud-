@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Comisión{% endblock %}
+{% block content %}
+<div class="barra-superior"><a>&#128181; Comisión</a><a href="{{ url_for('dashboard.seleccionar_negocio') }}">Volver</a></div>
+<div class="contenedor"><div class="tarjeta"><h3>Comisión (0% - 5%)</h3>
+<form method="POST">
+    <label><input type="checkbox" name="activa_comision" value="1" {% if comision > 0 %}checked{% endif %}> Activar</label>
+    <input type="number" step="0.01" min="0" max="5" name="porcentaje" class="control" value="{{ "%.2f"|format(comision) }}">
+    <button type="submit" class="btn">Guardar</button>
+</form></div></div>
+{% endblock %}
