@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Estadísticas{% endblock %}
+{% block content %}
+<div class="barra-superior"><a>&#128202; Estadísticas</a><a href="{{ url_for('dashboard.dashboard_negocio') }}">Atrás</a></div>
+<div class="contenedor">
+    <div style="text-align:right;">{% if modo_prueba %}<span class="etiqueta badge-modo">&#128308; Modo Prueba</span>{% else %}<span class="etiqueta badge-normal">&#128994; Modo Normal</span>{% endif %}</div>
+    
+    <div class="tarjeta"><h3>Top 10 productos más vendidos</h3>
+    <table>
+        <tr><th>SKU</th><th>Producto</th><th>Total USD</th><th>Unidades</th></tr>
+        {% for p in top %}
+        <tr><td>{{ p.sku }}</td><td>{{ p.descripcion }}</td><td>${{ "%.2f"|format(p.total) }}</td><td>{{ p.unidades }}</td></tr>
+        {% endfor %}
+    </table></div>
+    
+    <div class="tarjeta"><h3>Producto menos vendido</h3>
+    {% if menos and menos.unidades %}
+    <p>{{ menos.descripcion }} ({{ menos.sku }}) - {{ menos.unidades }} unidades</p>
+    {% else %}
+    <p>Sin datos</p>
+    {% endif %}</div>
+    
+    <div class="tarjeta"><h3>Método de pago</h3>
+    <p><strong>Más frecuente:</strong> {{ metodo_frecuente }} ({{ uso_metodos[metodo_frecuente] }} transacciones)</p>
+    <p><strong>Mayor monto:</strong> {{ metodo_monto[0] if metodo_monto else 'Ninguno' }} - ${{ "%.2f"|format(metodo_monto[1]) if metodo_monto else '0' }}</p>
+    </div>
+    
+    <div class="tarjeta"><h3>Reabastecimiento (stock ≤ 5)</h3>
+    <ul>
+        {% for s in sugerencias %}
+        <li>{{ s.descripcion }} ({{ s.sku }}) - Stock: {{ s.stock }}</li>
+        {% endfor %}
+    </ul>
+    </div>
+</div>
+{% endblock %}
