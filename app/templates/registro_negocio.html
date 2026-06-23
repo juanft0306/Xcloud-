@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Registrar Negocio{% endblock %}
+{% block content %}
+<div class="contenedor" style="margin-top:30px;">
+<div class="tarjeta"><h2 style="text-align:center;">&#127968; Registrar Negocio</h2>
+    <p style="text-align:center; color:#666; font-size:12px;">Complete el formulario para solicitar un nuevo negocio.</p>
+    {% with mensajes = get_flashed_messages() %}{% if mensajes %}<div class="alerta">{{ mensajes[0] }}</div>{% endif %}{% endwith %}
+    <form method="POST">
+        <div class="campo"><label>Nombre del negocio</label><input type="text" name="nombre_negocio" class="control" required></div>
+        <div class="campo"><label>Teléfono del encargado</label><input type="text" name="telefono" class="control" required></div>
+        <div class="campo"><label>Correo electrónico del encargado</label><input type="email" name="email_encargado" class="control" required></div>
+        <div class="campo"><label>Descripción del negocio</label><textarea name="descripcion" class="control" rows="3" required></textarea></div>
+        <button type="submit" class="btn">Solicitar registro</button>
+    </form>
+    <p style="text-align:center; margin-top:15px;"><a href="{{ url_for('auth.portal') }}">Volver al inicio</a></p>
+</div></div>
+{% endblock %}
