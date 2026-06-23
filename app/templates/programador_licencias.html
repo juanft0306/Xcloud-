@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Licencias{% endblock %}
+{% block content %}
+<div class="barra-superior"><a>&#128273; Licencias</a><a href="{{ url_for('dashboard.seleccionar_negocio') }}">Volver</a></div>
+<div class="contenedor"><h3>Licencias</h3>
+{% for n in negocios %}<div class="tarjeta"><p><strong>{{ n[1] }}</strong> - {{ 'Activa' if n[3] else 'Inactiva' }}</p>
+{% if n[3] %}<a href="{{ url_for('programador.cambiar_licencia', negocio_id=n[0], accion='desactivar') }}" class="btn btn-peligro">Desactivar</a>
+{% else %}<a href="{{ url_for('programador.cambiar_licencia', negocio_id=n[0], accion='activar') }}" class="btn" style="background:#27ae60;">Activar</a>{% endif %}
+</div>{% endfor %}</div>
+{% endblock %}
