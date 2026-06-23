@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Seleccionar Rol{% endblock %}
+{% block content %}
+<div class="barra-superior"><a>&#128100; Seleccionar Rol</a><a href="{{ url_for('auth.cerrar_sesion') }}">Salir</a></div>
+<div class="contenedor"><h3>Elige el rol con el que deseas actuar:</h3>
+    {% for r in roles %}
+    <div class="tarjeta" style="cursor:pointer;" onclick="document.getElementById('rol_input').value='{{ r }}'; document.getElementById('form_roles').submit();">
+        <h4>{{ r|capitalize }}</h4></div>
+    {% endfor %}
+    <form id="form_roles" method="POST" style="display:none;"><input type="hidden" id="rol_input" name="rol"></form>
+</div>
+{% endblock %}
