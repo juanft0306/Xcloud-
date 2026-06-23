@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Gastos{% endblock %}
+{% block content %}
+<div class="barra-superior"><a>&#128202; Gastos</a><a href="{{ url_for('contabilidad.contabilidad') }}">Volver</a></div>
+<div class="contenedor">
+<div class="tarjeta"><h3>Registrar Gasto</h3>
+<form method="POST">
+    <div class="campo"><label>Concepto</label><input type="text" name="concepto" class="control" required></div>
+    <div class="campo"><label>Monto USD</label><input type="number" step="0.01" name="monto" class="control" required></div>
+    <div class="campo"><label>Categoría</label>
+        <select name="categoria" class="control">
+            <option>General</option><option>Alquiler</option><option>Servicios</option>
+            <option>Nómina</option><option>Suministros</option><option>Publicidad</option>
+            <option>Transporte</option><option>Impuestos</option><option>Venta</option><option>Otros</option>
+        </select></div>
+    <div class="campo"><label>Fecha</label><input type="date" name="fecha" class="control" value="{{ now().strftime('%Y-%m-%d') }}"></div>
+    <button type="submit" class="btn">Registrar Gasto</button>
+</form></div>
+<div class="tarjeta"><h3>Filtrar Gastos</h3>
+<form method="GET">
+    <div class="rejilla-2">
+        <select name="categoria" class="control"><option value="">Todas</option>
+        {% for c in categorias %}<option value="{{ c[0] }}" {% if filtro_categoria==c[0] %}selected{% endif %}>{{ c[0] }}</option>{% endfor %}</select>
+        <input type="date" name="fecha" class="control" value="{{ filtro_fecha }}">
+    </div>
+    <button type="submit" class="btn">Filtrar</button> <a href="{{ url_for('contabilidad.gastos') }}" class="btn btn-advertencia">Limpiar</a>
+</form></div>
+<div class="tarjeta"><h3>Gastos Registrados</h3>
+<p><strong>Total acumulado: ${{ "%.2f"|format(total_gastos) }}</strong></p>
+<div class="scroll-tabla"><table><tr><th>Fecha</th><th>Concepto</th><th>Categoría</th><th>Monto</th></tr>
+{% for g in gastos %}<tr><td>{{ g[0] }}</td><td>{{ g[1] }}</td><td>{{ g[3] }}</td><td>${{ "%.2f"|format(g[2]) }}</td></tr>{% endfor %}
+</table></div></div>
+</div>
+{% endblock %}
