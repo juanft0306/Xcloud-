@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Reportes{% endblock %}
+{% block content %}
+<div class="barra-superior"><a>&#128202; Reportes</a><a href="{{ url_for('dashboard.dashboard_negocio') }}">Atrás</a></div>
+<div class="contenedor">
+    <div class="tarjeta">
+        <h3>&#128230; Exportar datos</h3>
+        <a href="{{ url_for('reportes.exportar_csv', tipo='productos') }}" class="btn">&#128230; Exportar productos (CSV)</a>
+        <a href="{{ url_for('reportes.exportar_csv', tipo='facturas') }}" class="btn" style="margin-top:10px;">&#129534; Exportar facturas (CSV)</a>
+    </div>
+    
+    <div class="tarjeta">
+        <h3>&#128451;&#65039; Base de datos</h3>
+        <a href="{{ url_for('reportes.descargar_bd') }}" class="btn btn-advertencia">&#11015;&#65039; Descargar base de datos completa</a>
+        <p style="font-size:12px; color:#888; margin-top:5px;">Descarga el archivo .db completo del negocio (solo encargado).</p>
+    </div>
+    
+    <div class="tarjeta">
+        <h3>&#128196; Facturas en PDF</h3>
+        <p style="font-size:12px; color:#888;">Ve al listado de facturas y haz clic en "Ver" para generar el PDF desde allí.</p>
+    </div>
+</div>
+{% endblock %}
