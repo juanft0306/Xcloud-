@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Contabilidad{% endblock %}
+{% block content %}
+<div class="barra-superior"><a>&#128188; Contabilidad</a><a href="{{ url_for('dashboard.dashboard_negocio') }}">Atrás</a></div>
+<div class="contenedor">
+<div style="text-align:right;">{% if modo_prueba %}<span class="etiqueta badge-modo">&#128308; Modo Prueba</span>{% else %}<span class="etiqueta badge-normal">&#128994; Modo Normal</span>{% endif %}</div>
+
+<div class="tarjeta"><h3>&#128451;&#65039; Balance General</h3>
+<table>
+<tr><td colspan="2"><strong>ACTIVOS</strong></td></tr>
+<tr><td>Caja y Bancos</td><td style="text-align:right;">${{ "%.2f"|format(balance.caja) }}</td></tr>
+<tr><td>Inventario</td><td style="text-align:right;">${{ "%.2f"|format(balance.inventario) }}</td></tr>
+<tr><td><strong>Total Activos</strong></td><td style="text-align:right;"><strong>${{ "%.2f"|format(balance.activos_totales) }}</strong></td></tr>
+<tr><td colspan="2"><strong>PASIVOS</strong></td></tr>
+<tr><td>Cuentas por Pagar</td><td style="text-align:right;">${{ "%.2f"|format(balance.cuentas_por_pagar) }}</td></tr>
+<tr><td><strong>Total Pasivos</strong></td><td style="text-align:right;"><strong>${{ "%.2f"|format(balance.pasivos_totales) }}</strong></td></tr>
+<tr><td colspan="2"><strong>PATRIMONIO</strong></td></tr>
+<tr><td><strong>Patrimonio Neto</strong></td><td style="text-align:right;"><strong>${{ "%.2f"|format(balance.patrimonio) }}</strong></td></tr>
+</table></div>
+
+<div class="tarjeta"><h3>&#128200; Estado de Resultados (General)</h3>
+<table>
+<tr><td>Ingresos por Ventas</td><td style="text-align:right;">${{ "%.2f"|format(resultados.ingresos) }}</td></tr>
+<tr><td>Costo de Ventas</td><td style="text-align:right;">(${{ "%.2f"|format(resultados.costos) }})</td></tr>
+<tr><td><strong>Utilidad Bruta</strong></td><td style="text-align:right;"><strong>${{ "%.2f"|format(resultados.utilidad_bruta) }}</strong></td></tr>
+<tr><td style="color:red;">Comisión del Sistema</td><td style="text-align:right; color:red;">(${{ "%.2f"|format(resultados.comision) }})</td></tr>
+<tr><td style="color:red;">Gastos Operativos</td><td style="text-align:right; color:red;">(${{ "%.2f"|format(resultados.gastos_operativos) }})</td></tr>
+<tr><td><strong>Utilidad Neta</strong></td><td style="text-align:right;"><strong>${{ "%.2f"|format(resultados.utilidad_neta) }}</strong></td></tr>
+</table></div>
+
+<div class="tarjeta"><h3>&#128197; Semanal (desde {{ inicio_semana }})</h3>
+<table>
+<tr><td>Ingresos</td><td style="text-align:right;">${{ "%.2f"|format(resultados_semana.ingresos) }}</td></tr>
+<tr><td>Costos</td><td style="text-align:right;">(${{ "%.2f"|format(resultados_semana.costos) }})</td></tr>
+<tr><td><strong>Utilidad Neta</strong></td><td style="text-align:right;"><strong>${{ "%.2f"|format(resultados_semana.utilidad_neta) }}</strong></td></tr>
+</table></div>
+
+<div class="tarjeta"><h3>&#128197; Mensual (desde {{ inicio_mes }})</h3>
+<table>
+<tr><td>Ingresos</td><td style="text-align:right;">${{ "%.2f"|format(resultados_mes.ingresos) }}</td></tr>
+<tr><td>Costos</td><td style="text-align:right;">(${{ "%.2f"|format(resultados_mes.costos) }})</td></tr>
+<tr><td><strong>Utilidad Neta</strong></td><td style="text-align:right;"><strong>${{ "%.2f"|format(resultados_mes.utilidad_neta) }}</strong></td></tr>
+</table></div>
+
+<div class="tarjeta"><h3>&#128197; Anual (desde {{ inicio_ano }})</h3>
+<table>
+<tr><td>Ingresos</td><td style="text-align:right;">${{ "%.2f"|format(resultados_ano.ingresos) }}</td></tr>
+<tr><td>Costos</td><td style="text-align:right;">(${{ "%.2f"|format(resultados_ano.costos) }})</td></tr>
+<tr><td><strong>Utilidad Neta</strong></td><td style="text-align:right;"><strong>${{ "%.2f"|format(resultados_ano.utilidad_neta) }}</strong></td></tr>
+</table></div>
+
+<div class="tarjeta">
+<a href="{{ url_for('contabilidad.libro_diario') }}" class="btn">&#128214; Libro Diario</a>
+<a href="{{ url_for('contabilidad.gastos') }}" class="btn" style="margin-top:10px;">&#128202; Registrar Gasto</a>
+<a href="{{ url_for('contabilidad.exportar_excel') }}" class="btn" style="margin-top:10px;">&#128229; Exportar a Excel</a>
+</div>
+</div>
+{% endblock %}
