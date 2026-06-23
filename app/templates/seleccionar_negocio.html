@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Seleccionar Negocio{% endblock %}
+{% block content %}
+<style>
+.btn-validar { background: #27ae60; color: white; }
+.btn-negocios { background: #c0392b; color: white; }
+.btn-licencias { background: #2c3e50; color: white; }
+.btn-comision { background: #16a085; color: white; }
+.btn-suscripciones { background: #6c3483; color: white; }
+.btn-tickets { background: #d4ac0d; color: #1a1a1a; }
+body.modo-oscuro .btn-validar { background: #1e8449; }
+body.modo-oscuro .btn-negocios { background: #922b21; }
+body.modo-oscuro .btn-licencias { background: #1a252f; }
+body.modo-oscuro .btn-comision { background: #117a65; }
+body.modo-oscuro .btn-suscripciones { background: #4a235a; }
+body.modo-oscuro .btn-tickets { background: #b7950b; color: #f0f0f0; }
+</style>
+<div class="barra-superior"><a>&#128104;&#8205;&#128187; Programador</a><a href="{{ url_for('auth.cerrar_sesion') }}">Salir</a></div>
+<div class="contenedor">
+    <h3>Selecciona una opción:</h3>
+    <div class="tarjeta" style="cursor:pointer;" onclick="window.location='{{ url_for('dashboard.seleccionar_negocio_propio') }}'">
+        <h4>&#128193; Negocio propio</h4><p>Tu negocio personal (datos persistentes)</p></div>
+    <div class="tarjeta" style="cursor:pointer;" onclick="window.location='{{ url_for('dashboard.seleccionar_verificacion') }}'">
+        <h4>&#128300; Verificación del sistema</h4><p>Entorno de pruebas (los datos se borran al salir)</p></div>
+    <div style="margin-top:15px;">
+        <a href="{{ url_for('programador.solicitudes') }}" class="btn btn-validar" style="margin-top:10px;">&#9989; Validar solicitudes</a>
+        <a href="{{ url_for('programador.negocios') }}" class="btn btn-negocios" style="margin-top:10px;">&#127968; Gestionar negocios</a>
+        <a href="{{ url_for('programador.licencias') }}" class="btn btn-licencias" style="margin-top:10px;">&#128273; Licencias</a>
+        <a href="{{ url_for('programador.comision') }}" class="btn btn-comision" style="margin-top:10px;">&#128181; Comisión</a>
+        <a href="{{ url_for('programador.suscripciones') }}" class="btn btn-suscripciones" style="margin-top:10px;">&#128179; Suscripciones</a>
+        <a href="{{ url_for('programador.tickets') }}" class="btn btn-tickets" style="margin-top:10px;">&#127915; Tickets</a>
+    </div>
+</div>
+{% endblock %}
