@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Facturas{% endblock %}
+{% block content %}
+<div class="barra-superior"><a>&#129534; Facturas</a><a href="{{ url_for('dashboard.dashboard_negocio') }}">Atrás</a></div>
+<div class="contenedor">
+{% if session['rol_activo'] == 'encargado' %}
+<div class="tarjeta"><h3>&#127912; Diseño de factura</h3>
+<form method="POST">
+    <select name="tipo_factura" class="control" onchange="this.form.submit()">
+        <option value="moderna" {% if tipo_actual=='moderna' %}selected{% endif %}>Moderna (formato completo)</option>
+        <option value="clasica" {% if tipo_actual=='clasica' %}selected{% endif %}>Clásica (ticket simplificado)</option>
+    </select>
+    <noscript><button type="submit" class="btn">Cambiar diseño</button></noscript>
+</form></div>
+{% endif %}
+<div class="tarjeta"><h3>Filtrar facturas</h3>
+<form method="GET">
+    <div class="rejilla-2">
+        <div class="campo"><label>Cliente</label><input type="text" name="cliente" class="control" value="{{ filtro_cliente }}"></div>
+        <div class="campo"><label>Método</label>
+            <select name="metodo" class="control"><option value="">Todos</option>
+                <option value="Efectivo" {% if filtro_metodo=='Efectivo' %}selected{% endif %}>Efectivo</option>
+                <option value="Pago Móvil" {% if filtro_metodo=='Pago Móvil' %}selected{% endif %}>Pago Móvil</option>
+                <option value="Transferencia" {% if filtro_metodo=='Transferencia' %}selected{% endif %}>Transferencia</option>
+            </select></div>
+    </div>
+    <div class="campo"><label>Fecha</label><input type="date" name="fecha" class="control" value="{{ filtro_fecha }}"></div>
+    <button type="submit" class="btn">Filtrar</button> <a href="{{ url_for('ventas.listar_facturas') }}" class="btn btn-advertencia">Limpiar</a>
+</form></div>
+<div class="tarjeta"><h3>Facturas</h3>
+<p style="font-size:12px; color:#888;">Diseño actual: <strong>{{ 'Moderna' if tipo_actual=='moderna' else 'Clásica' }}</strong></p>
+<div class="scroll-tabla"><table><tr><th>Nº</th><th>Fecha</th><th>Cliente</th><th>Total</th><th>Método</th><th>Acción</th></tr>
+{% for f in facturas %}
+<tr><td>{{ f.numero }}</td><td>{{ f.fecha }}</td><td>{{ f.cliente }}</td><td>${{ "%.2f"|format(f.total_usd) }}</td><td>{{ f.metodo_pago }}</td>
+<td><a href="{{ url_for('ventas.ver_factura', num=f.numero) }}" class="btn">Ver</a>
+{% if session['rol_activo'] == 'encargado' %}
+<a href="{{ url_for('ventas.anular_factura_ruta', num=f.numero) }}" class="btn btn-peligro" onclick="return confirm('¿Anular factura #{{ f.numero }}?')">&#10060;</a>
+{% endif %}</td></tr>
+{% endfor %}
+</table></div>
+{% if total_paginas > 1 %}<div style="text-align:center;margin-top:10px;">
+    {% if pagina > 1 %}<a href="?pagina={{ pagina-1 }}&cliente={{ filtro_cliente }}&metodo={{ filtro_metodo }}&fecha={{ filtro_fecha }}" class="btn">&#9664; Anterior</a>{% endif %}
+    <span>Página {{ pagina }} de {{ total_paginas }}</span>
+    {% if pagina < total_paginas %}<a href="?pagina={{ pagina+1 }}&cliente={{ filtro_cliente }}&metodo={{ filtro_metodo }}&fecha={{ filtro_fecha }}" class="btn">Siguiente &#9654;</a>{% endif %}
+</div>{% endif %}</div>
+</div>
+{% endblock %}
