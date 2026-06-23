@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Escanear Factura{% endblock %}
+{% block head_extra %}
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+{% endblock %}
+{% block content %}
+<div class="barra-superior"><a>&#128247; Escanear Factura</a><a href="{{ url_for('dashboard.dashboard_negocio') }}">Atrás</a></div>
+<div class="contenedor">
+<div class="tarjeta"><h3>Tomar foto o seleccionar imagen</h3>
+<input type="file" id="inputCamara" accept="image/*" capture="environment" style="display:none;" onchange="procesarImagen(this)">
+<button onclick="document.getElementById('inputCamara').click()" class="btn">&#128247; Tomar foto</button>
+<input type="file" id="inputGaleria" accept="image/*" style="display:none;" onchange="procesarImagen(this)">
+<button onclick="document.getElementById('inputGaleria').click()" class="btn" style="margin-top:10px;">&#128444;&#65039; Galería</button>
+<div id="estadoOCR" style="margin-top:10px;"></div>
+</div>
+{% if datos_extraidos %}
+<div class="tarjeta"><h3>Datos detectados</h3>
+<form method="POST" action="{{ url_for('api.registrar_factura_escaneada') }}">
+    <input type="hidden" name="productos_json" value='{{ datos_extraidos.productos|tojson }}'>
+    <div class="campo"><label>Cliente</label><input type="text" name="cliente" class="control" value="Consumidor Final"></div>
+    <div class="campo"><label>Método de pago</label>
+        <select name="metodo_pago" class="control">
+            <option>Efectivo USD</option><option>Pago Móvil</option><option>Transferencia</option>
+        </select></div>
+    <h4>Productos</h4><table><tr><th>Descripción</th><th>Cant</th><th>Precio</th></tr>
+    {% for p in datos_extraidos.productos %}<tr><td>{{ p.descripcion }}</td><td>{{ p.cantidad }}</td><td>${{ "%.2f"|format(p.precio) }}</td></tr>{% endfor %}</table>
+    {% if datos_extraidos.total %}<p><strong>Total detectado:</strong> ${{ "%.2f"|format(datos_extraidos.total) }}</p>{% endif %}
+    <button type="submit" class="btn">&#9989; Registrar factura</button>
+</form></div>{% endif %}
+</div>
+<script>
+function procesarImagen(inputElement) {
+    let file = inputElement.files[0]; if (!file) { alert('No se seleccionó ninguna imagen.'); return; }
+    document.getElementById('estadoOCR').innerHTML = 'Procesando...';
+    Tesseract.recognize(file, 'spa', { logger: m => { if (m.status === 'recognizing text') document.getElementById('estadoOCR').innerHTML = 'Reconociendo: ' + Math.round(m.progress*100) + '%'; } })
+    .then(({ data: { text } }) => { document.getElementById('estadoOCR').innerHTML = '';
+        let form = document.createElement('form'); form.method = 'POST'; form.action = '{{ url_for("api.escanear_factura") }}';
+        let input = document.createElement('input'); input.type = 'hidden'; input.name = 'texto_ocr'; input.value = text;
+        form.appendChild(input); document.body.appendChild(form); form.submit(); })
+    .catch(err => { document.getElementById('estadoOCR').innerHTML = 'Error: ' + err; });
+}
+</script>
+{% endblock %}
