@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Xcloud{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+    <script src="{{ url_for('static', filename='js/chatbot.js') }}"></script>
+    {% block head_extra %}{% endblock %}
+</head>
+<body class="{% if tema == 'oscuro' %}modo-oscuro{% endif %}">
+    {% block content %}{% endblock %}
+</body>
+</html>
