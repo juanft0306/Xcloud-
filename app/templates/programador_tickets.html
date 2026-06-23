@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Tickets{% endblock %}
+{% block content %}
+<div class="barra-superior"><a>&#127915; Tickets</a><a href="{{ url_for('dashboard.seleccionar_negocio') }}">Volver</a></div>
+<div class="contenedor"><h3>Tickets</h3>
+{% for t in tickets %}<div class="tarjeta"><p><strong>#{{ t[0] }}</strong> - {{ t[3] }} ({{ t[4] }})</p>
+<p><strong>Negocio:</strong> {{ t[1] }} | <strong>Usuario:</strong> {{ t[2] }}</p>
+{% if t[4]=='abierto' %}<a href="{{ url_for('programador.responder_ticket', ticket_id=t[0]) }}" class="btn">Responder</a>{% endif %}
+</div>{% endfor %}</div>
+{% endblock %}
