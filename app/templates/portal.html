@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Xcloud - Inicio{% endblock %}
+{% block content %}
+<div class="contenedor" style="margin-top: 30px;">
+<div class="tarjeta">
+    <div class="logo-container">
+        <div class="logo-wrapper" onclick="cambiarTema()" title="Tocar para cambiar tema claro/oscuro">
+            <span class="nube-fondo">&#9729;&#65039;</span>
+            <span class="logo-texto">Xc<span class="rayo"></span>oud</span>
+        </div>
+        <span class="subtitulo">Sistema Contable Multi‑Negocio</span>
+    </div>
+    {% with mensajes = get_flashed_messages() %}{% if mensajes %}<div class="alerta">{{ mensajes[0] }}</div>{% endif %}{% endwith %}
+    <h4>&#127968; Acceso a Negocio</h4>
+    <form method="POST" action="{{ url_for('auth.login_negocio') }}">
+        <div class="campo"><label>Correo del negocio</label><input type="email" name="email_negocio" class="control" required></div>
+        <div class="campo"><label>Contraseña del negocio</label><input type="password" name="password_negocio" class="control" required></div>
+        <button type="submit" class="btn">Ingresar al negocio</button>
+    </form>
+    <p style="text-align:center; margin-top:15px;">¿Quieres registrar un nuevo negocio? <a href="{{ url_for('auth.registro_negocio') }}">Registrar negocio</a></p>
+    <div id="toggle-programador" onclick="document.getElementById('acceso-programador').style.display='block'; this.style.display='none';">&#128295;</div>
+    <div id="acceso-programador">
+        <hr style="margin: 20px 0;">
+        <h4>&#128295; Acceso Programador</h4>
+        <form method="POST" action="{{ url_for('auth.login_programador') }}">
+            <div class="campo"><label>Correo programador</label><input type="email" name="email" class="control" required></div>
+            <div class="campo"><label>Contraseña</label><input type="password" name="password" class="control" required></div>
+            <button type="submit" class="btn">Ingresar como Programador</button>
+        </form>
+    </div>
+</div>
+</div>
+<script>
+function cambiarTema() {
+    var body = document.body; var nuevoTema;
+    if (body.classList.contains('modo-oscuro')) { body.classList.remove('modo-oscuro'); nuevoTema = 'claro'; }
+    else { body.classList.add('modo-oscuro'); nuevoTema = 'oscuro'; }
+    localStorage.setItem('tema', nuevoTema);
+    fetch('/toggle_tema', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({tema: nuevoTema}) }).catch(function() {});
+}
+(function() { var t = localStorage.getItem('tema'); if (t === 'oscuro') document.body.classList.add('modo-oscuro'); })();
+</script>
+{% endblock %}
