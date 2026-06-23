@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Notificaciones{% endblock %}
+{% block content %}
+<div class="barra-superior"><a>&#128276; Notificaciones</a><a href="{{ url_for('dashboard.dashboard_negocio') }}">Atrás</a></div>
+<div class="contenedor">
+    {% for n in notificaciones %}
+    <div class="tarjeta" style="{% if not n[3] %}border-left: 5px solid var(--secundario);{% endif %}">
+        <p>{{ n[1] }} <small>({{ n[2] }})</small></p>
+        {% if not n[3] %}
+        <a href="{{ url_for('soporte.marcar_leida', notificacion_id=n[0]) }}" class="btn">Marcar como leída</a>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
