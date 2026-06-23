@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Factura {{ factura.numero }}{% endblock %}
+{% block head_extra %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+{% endblock %}
+{% block content %}
+<div class="barra-superior"><a>&#129534; Factura #{{ factura.numero }}</a><a href="{{ url_for('ventas.listar_facturas') }}">Volver</a></div>
+<div class="contenedor" id="contenedor-factura">
+<div class="factura-moderna">
+    <h2>&#129534; FACTURA</h2>
+    <p><strong>Emitido por:</strong> {{ negocio.nombre }}</p>
+    <p><strong>Tel:</strong> {{ negocio.telefono }} | <strong>Email:</strong> {{ negocio.email }}</p><hr>
+    <p><strong>Número:</strong> {{ factura.numero }}</p>
+    <p><strong>Fecha:</strong> {{ factura.fecha }}</p>
+    <p><strong>Cliente:</strong> {{ factura.cliente }}</p>
+    <p><strong>Método:</strong> {{ factura.metodo_pago }}</p>
+    <p><strong>Total:</strong> ${{ "%.2f"|format(factura.total_usd) }}</p>
+    {% if comision_pct > 0 %}<p><strong>Comisión sistema ({{ comision_pct }}%):</strong> ${{ "%.2f"|format(factura.total_usd * comision_pct / (100+comision_pct)) }}</p>{% endif %}
+    <p><strong>Bs:</strong> {{ "%.2f"|format(factura.total_usd * tasa) }}</p>
+    <p><strong>Tasa usada:</strong> 1 USD = {{ "%.2f"|format(tasa) }} Bs</p>
+</div></div>
+<div style="text-align:center;margin-top:20px;">
+    <button class="btn" onclick="html2canvas(document.getElementById('contenedor-factura')).then(c=>{let a=document.createElement('a');a.download='factura_{{ factura.numero }}.png';a.href=c.toDataURL();a.click();})">&#128248; Descargar como imagen</button>
+</div>
+{% endblock %}
