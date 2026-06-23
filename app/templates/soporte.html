@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Soporte{% endblock %}
+{% block content %}
+<div class="barra-superior"><a>&#127915; Soporte</a><a href="{{ url_for('dashboard.dashboard_negocio') }}">Atrás</a></div>
+<div class="contenedor">
+    <div class="tarjeta"><h3>Enviar ticket</h3>
+    <form method="POST">
+        <div class="campo"><label>Asunto</label><input type="text" name="asunto" class="control" required></div>
+        <div class="campo"><label>Mensaje</label><textarea name="mensaje" class="control" rows="4" required></textarea></div>
+        <button type="submit" class="btn">Enviar ticket</button>
+    </form></div>
+    
+    <div class="tarjeta"><h3>Tus tickets</h3>
+    {% for t in tickets %}
+    <div style="border-bottom:1px solid var(--borde); padding:8px 0;">
+        <p><strong>#{{ t[0] }}</strong> - {{ t[1] }} ({{ t[2] }}) - {{ t[3] }}</p>
+        {% if t[4] %}<p><strong>Respuesta:</strong> {{ t[4] }}</p>{% endif %}
+    </div>
+    {% endfor %}
+    </div>
+</div>
+{% endblock %}
