@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Mi Cuenta{% endblock %}
+{% block content %}
+<div class="barra-superior"><a>&#128100; Mi Cuenta</a><a href="{{ url_for('dashboard.dashboard_negocio') }}">Atrás</a></div>
+<div class="contenedor">
+    <div class="tarjeta"><h3>Datos personales</h3>
+    <form method="POST">
+        <div class="campo"><label>Nombre</label><input type="text" name="nombre" class="control" value="{{ usuario[0] }}"></div>
+        <div class="campo"><label>Teléfono</label><input type="text" name="telefono" class="control" value="{{ usuario[1] or '' }}"></div>
+        <p><strong>Email:</strong> {{ usuario[2] }}</p>
+        <button type="submit" class="btn">Actualizar</button>
+    </form></div>
+    
+    <div class="tarjeta"><h3>Últimos pedidos</h3>
+    {% for p in pedidos %}
+    <p>#{{ p[0] }} - {{ p[1] }} - ${{ "%.2f"|format(p[2]) }} - {{ p[3] }}</p>
+    {% endfor %}
+    </div>
+</div>
+{% endblock %}
