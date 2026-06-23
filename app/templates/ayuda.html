@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Ayuda{% endblock %}
+{% block content %}
+<div class="barra-superior"><a>&#10067; Ayuda</a><a href="{{ url_for('dashboard.dashboard_negocio') }}">Atrás</a></div>
+<div class="contenedor">
+
+<details open><summary>&#128214; Manual de usuario</summary>
+<div class="tarjeta">{{ manual_html | safe }}</div></details>
+
+<details><summary>&#128187; Información del sistema</summary>
+<div class="tarjeta" style="font-size:13px;">{{ info_sistema_html | safe }}</div></details>
+
+<details><summary>&#127915; Soporte (Tickets)</summary>
+<div class="tarjeta"><h4>Enviar nuevo ticket</h4>
+<form method="POST" action="{{ url_for('soporte.soporte') }}">
+    <input type="text" name="asunto" class="control" placeholder="Asunto" required>
+    <textarea name="mensaje" class="control" rows="3" placeholder="Describe tu problema" required></textarea>
+    <button type="submit" class="btn">Enviar ticket</button></form>
+<h4>Historial reciente</h4>
+{% if tickets %}{% for t in tickets %}
+<div style="border-bottom:1px solid var(--borde); padding:8px 0;">
+<p><strong>#{{ t[0] }}</strong> - {{ t[1] }} ({{ t[2] }}) - {{ t[3] }}</p>
+{% if t[4] %}<p><strong>Respuesta:</strong> {{ t[4] }}</p>{% endif %}</div>
+{% endfor %}{% else %}<p>No has enviado tickets.</p>{% endif %}</div></details>
+
+<details><summary>&#128276; Notificaciones</summary>
+<div class="tarjeta">
+{% if notificaciones %}{% for n in notificaciones %}
+<div style="border-left: 4px solid {% if n[3] %}gray{% else %}var(--secundario){% endif %}; padding:8px; margin-bottom:8px;">
+<p>{{ n[1] }} <small>({{ n[2] }})</small></p>
+{% if not n[3] %}<a href="{{ url_for('soporte.marcar_leida', notificacion_id=n[0]) }}" class="btn">Marcar como leída</a>{% endif %}</div>
+{% endfor %}{% else %}<p>No tienes notificaciones.</p>{% endif %}</div></details>
+
+</div>
+{% endblock %}
