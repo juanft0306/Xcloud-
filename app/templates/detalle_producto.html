@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}{{ producto.descripcion }}{% endblock %}
+{% block content %}
+<div class="barra-superior"><a>&#128230; {{ producto.descripcion }}</a><a href="{{ url_for('inventario.inventario') }}">Volver</a></div>
+<div class="contenedor"><div class="tarjeta"><h3>{{ producto.descripcion }}</h3>
+    <p><strong>SKU:</strong> {{ producto.sku }}</p><p><strong>Costo USD:</strong> ${{ "%.2f"|format(producto.costo_usd) }}</p>
+    <p><strong>Stock:</strong> {{ producto.stock }}</p><p><strong>Límite crítico:</strong> {{ producto.limite_critico }}</p>
+    {% if producto.imagen_url %}<img src="{{ producto.imagen_url }}" style="max-width:100%;">{% endif %}
+</div></div>
+{% endblock %}
