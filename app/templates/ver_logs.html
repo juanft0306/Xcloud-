@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Registros de Actividad{% endblock %}
+{% block content %}
+<div class="barra-superior"><a>&#128203; Logs</a><a href="{{ url_for('dashboard.dashboard_negocio') }}">Atrás</a></div>
+<div class="contenedor">
+    <div class="tarjeta"><h3>Actividad reciente</h3>
+    <div class="scroll-tabla"><table>
+        <tr><th>Fecha</th><th>Usuario</th><th>Acción</th><th>Detalles</th></tr>
+        {% for l in logs %}
+        <tr><td>{{ l[0] }}</td><td>{{ l[1] }}</td><td>{{ l[2] }}</td><td>{{ l[3] }}</td></tr>
+        {% endfor %}
+    </table></div>
+    {% if total_paginas > 1 %}
+    <div style="text-align:center; margin-top:10px;">
+        {% if pagina > 1 %}<a href="?pagina={{ pagina-1 }}" class="btn">&#9664; Anterior</a>{% endif %}
+        <span>Página {{ pagina }} de {{ total_paginas }}</span>
+        {% if pagina < total_paginas %}<a href="?pagina={{ pagina+1 }}" class="btn">Siguiente &#9654;</a>{% endif %}
+    </div>{% endif %}
+    </div>
+</div>
+{% endblock %}
