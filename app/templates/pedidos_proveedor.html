@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Pedidos Proveedor{% endblock %}
+{% block content %}
+<div class="barra-superior"><a>&#128230; Pedidos</a><a href="{{ url_for('dashboard.dashboard_negocio') }}">Atrás</a></div>
+<div class="contenedor"><h3>Pedidos pendientes</h3>
+{% if pedidos %}
+    {% for p in pedidos %}
+    <div class="tarjeta">
+        <p><strong>#{{ p[0] }}</strong> - {{ p[1] }}</p>
+        <p><strong>Cliente:</strong> {{ p[4] }}</p>
+        <p><strong>Total:</strong> ${{ "%.2f"|format(p[2]) }}</p>
+        <p><strong>Estado:</strong> {{ p[3] }}</p>
+        <p><strong>Método:</strong> {{ p[5] }}</p>
+        <p><strong>Código de entrega:</strong> <code>{{ p[6] or 'No asignado' }}</code></p>
+        <form method="POST" action="{{ url_for('proveedor.verificar_entrega', pedido_id=p[0]) }}">
+            <input type="text" name="codigo" class="control" placeholder="Código de 5 caracteres" maxlength="5" required>
+            <button type="submit" class="btn" style="background:#27ae60;">&#9989; Verificar y entregar</button>
+        </form>
+        <a href="{{ url_for('proveedor.rechazar_pedido', pedido_id=p[0]) }}" class="btn btn-peligro" style="margin-top:5px;" onclick="return confirm('¿Rechazar este pedido?')">&#10060; Rechazar</a>
+    </div>
+    {% endfor %}
+{% else %}
+    <p>No hay pedidos pendientes.</p>
+{% endif %}
+</div>
+{% endblock %}
