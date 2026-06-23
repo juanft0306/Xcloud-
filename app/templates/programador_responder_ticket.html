@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Responder Ticket{% endblock %}
+{% block content %}
+<div class="barra-superior"><a>&#127915; Responder</a><a href="{{ url_for('programador.tickets') }}">Volver</a></div>
+<div class="contenedor"><div class="tarjeta"><h3>Ticket #{{ ticket[0] }}</h3>
+<p><strong>Asunto:</strong> {{ ticket[4] }}</p>
+<p><strong>Mensaje:</strong> {{ ticket[5] }}</p>
+<form method="POST"><textarea name="respuesta" class="control" rows="4" required></textarea>
+<button type="submit" class="btn">Enviar respuesta</button></form></div></div>
+{% endblock %}
